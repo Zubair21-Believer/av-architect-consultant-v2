@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AV Architect Consultant V2 — Floor-Level AV Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{--bg:#0d1117;--bg2:#11171f;--panel:#161d27;--panel2:#1b232f;--line:#283342;--line2:#33415480;
+  --ink:#e7edf3;--dim:#9fb0c3;--faint:#6b7d92;--amber:#f0a23a;--amber2:#c47e22;--cyan:#37c0c8;--good:#5fb87a;
+  --mono:"IBM Plex Mono",monospace;--sans:"IBM Plex Sans",system-ui,sans-serif;--disp:"Bricolage Grotesque",sans-serif;}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  background-image:linear-gradient(var(--line2) 1px,transparent 1px),linear-gradient(90deg,var(--line2) 1px,transparent 1px);background-size:46px 46px}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1200px 600px at 80% -10%,#f0a23a14,transparent 60%),radial-gradient(900px 500px at -10% 110%,#37c0c810,transparent 60%)}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 22px 90px}
+  header{padding:40px 0 24px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:15px}
+  .logo{width:46px;height:46px;flex:none;border-radius:11px;background:linear-gradient(150deg,#1d2734,#0f151d);border:1px solid var(--line);display:grid;place-items:center;box-shadow:inset 0 1px 0 #ffffff10}
+  .logo span{font-family:var(--disp);font-weight:800;font-size:20px;background:linear-gradient(180deg,var(--amber),var(--amber2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  h1{font-family:var(--disp);font-weight:800;letter-spacing:-.5px;font-size:clamp(26px,4vw,38px);margin:0;line-height:1.02}
+  h1 em{font-style:normal;color:var(--amber)}
+  .v2{font-family:var(--mono);font-size:12px;color:#1a1206;background:var(--amber);padding:2px 8px;border-radius:6px;font-weight:600;vertical-align:middle;margin-left:8px}
+  .tag{font-family:var(--mono);font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:2.5px;margin-top:6px}
+  .lead{color:var(--dim);max-width:720px;margin:15px 0 0;font-size:15px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:10px;padding:22px;box-shadow:0 10px 30px #0004}
+  .sec{font-family:var(--mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);margin:26px 0 14px;display:flex;align-items:center;gap:10px}
+  .sec::before{content:"";width:7px;height:7px;background:var(--amber);transform:rotate(45deg);box-shadow:0 0 10px var(--amber)}
+  .floor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .rt{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px 14px}
+  .rt .nm{font-size:14px}.rt .nm small{display:block;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .stp{display:flex;align-items:center;gap:8px}
+  .stp button{width:30px;height:30px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:7px;font-size:17px;cursor:pointer;line-height:1}
+  .stp button:hover{border-color:var(--amber)}
+  .stp input{width:52px;text-align:center;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:7px 4px;font-family:var(--mono);font-size:15px}
+  .projrow{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+  .projrow input{flex:1;min-width:200px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--sans);font-size:14px}
+  .actions{display:flex;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap}
+  .btn{font-family:var(--disp);font-weight:700;font-size:15px;border:none;border-radius:9px;padding:13px 24px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:filter .15s,transform .1s}
+  .btn:active{transform:translateY(1px)}
+  .btn-p{color:#1a1206;background:linear-gradient(180deg,#f4ad48,var(--amber2));box-shadow:0 6px 16px #f0a23a33,inset 0 1px 0 #fff6}
+  .btn-p:hover{filter:brightness(1.06)}
+  .btn-x{color:#072014;background:linear-gradient(180deg,#6fce8c,#3f9a5d);box-shadow:0 6px 16px #5fb87a33,inset 0 1px 0 #fff6}
+  .btn-g{color:var(--ink);background:var(--panel2);border:1px solid var(--line)}
+  .btn-g:hover{border-color:var(--faint)}
+  .hint{font-family:var(--mono);font-size:11px;color:var(--faint)}
+  #out{display:none;margin-top:32px}
+  .reveal{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .blabel{font-family:var(--mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);margin:0 0 12px;display:flex;align-items:center;gap:9px}
+  .blabel .n{color:var(--faint)}
+  .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .kv .i{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  .kv .i .k{font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--faint)}
+  .kv .i .v{font-size:20px;font-family:var(--disp);font-weight:800;color:var(--ink);margin-top:3px}
+  .kv .i .v.amber{color:var(--amber)}
+  .prose{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:14px 16px;font-size:14px;color:var(--dim)}
+  .prose.amber{border-left:3px solid var(--amber)}
+  .bomwrap{border:1px solid var(--line);border-radius:10px;overflow:auto;background:var(--panel);max-height:520px}
+  table{border-collapse:collapse;width:100%;min-width:680px;font-size:13px}
+  thead th{position:sticky;top:0;background:var(--panel2);text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  tbody td{padding:8px 12px;border-bottom:1px solid var(--line2);color:var(--ink);vertical-align:top}
+  td.mk,td.md{font-family:var(--mono);font-size:12px;color:var(--dim);white-space:nowrap}
+  td.q{text-align:center;font-family:var(--mono);font-weight:600;color:var(--amber);width:52px}
+  tr.rm td{background:#0e1b1c;color:var(--cyan);font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:9px 12px;font-weight:600}
+  tr.cat td{background:#141b24;color:var(--faint);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:6px 12px}
+  .btable{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  .btable td{padding:7px 10px;border-bottom:1px solid var(--line2)}
+  .btable td.n{text-align:right;font-family:var(--mono);color:var(--amber)}
+  .depwrap{display:grid;gap:14px}
+  .dep{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .dep .top{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--panel2);border-bottom:1px solid var(--line)}
+  .dep .top .t{font-family:var(--mono);font-size:12px;color:var(--ink)}
+  .dep svg{display:block;width:100%;height:auto}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:820px){.floor-grid{grid-template-columns:1fr}.kv{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo"><span>AV</span></div>
+      <div>
+        <h1>AV <em>Architect</em> Consultant<span class="v2">V2</span></h1>
+        <div class="tag">Floor-Level AV Design · Powered by AV Engineering</div>
+      </div>
+    </div>
+    <p class="lead">Enter the floor summary — how many of each room type. AV Architect designs the whole floor in one pass: a consolidated Bill of Materials, thermal load, and an AV Services Requirement sheet per room type for civil/MEP coordination.</p>
+  </header>
+
+  <div class="card" style="margin-top:26px">
+    <div class="projrow">
+      <input id="proj" placeholder="Project / floor name (e.g. Level 7 — Client Fit-out)"/>
+    </div>
+    <div class="sec" style="margin-top:6px">Floor Summary — rooms per type</div>
+    <div class="floor-grid" id="grid"></div>
+    <div class="actions">
+      <button class="btn btn-p" id="go">▷ Generate Floor Design</button>
+      <button class="btn btn-g" id="sample">Load example floor</button>
+      <button class="btn btn-g" id="clear">Clear</button>
+      <span class="hint" id="hint">Set at least one room type above 0.</span>
+    </div>
+  </div>
+
+  <div id="out"></div>
+
+  <footer>
+    <span>AV ARCHITECT CONSULTANT · V2</span>
+    <span>EOX AV Engineering</span>
+  </footer>
+</div>
+
+<script>
+/* ===================== ROOM-TYPE LIBRARY (seeded from repository) ===================== */
+const it=(c,d,mk,md,q,w,kg,r="")=>({c,d,mk,md,q,w,kg,r});
+const CC=it("Cables & Connectors","Connectors, consumables, cable dressing, lacing, accessories per global AV standards","Generic","CC",1,0,0,"Per room");
+const INC=it("Installation","Installation & Commissioning — supply, install, configure, test, handover","AVSI","SERVICE",1,0,0,"Per room");
+const ROOMS={
+ "4 Pax":{disp:'43"',items:[it("Display Systems",'43" UHD 4K display, 500 nits',"LG","43UH5Q",1,100,12),it("Display Systems",'Fixed wall mount for 43"',"Logic","WALL-43",1,0,5),it("Video Conferencing","All-in-one bar (Teams/Zoom) + Navigator","Cisco","Room Bar + Navigator",1,55,3,"Integrated cam/mic/spk"),it("Switching Interface","BYOD dock (Thunderbolt 4, 100W)","HP","Thunderbolt 4 G6",1,30,1),it("Switching Interface","Faceplate with HDMI & USB-C","AVSI","FP-H&U",1,0,0.3),CC,INC]},
+ "6 Pax":{disp:'55"',items:[it("Display Systems",'55" UHD 4K display, 500 nits',"LG","55UH5Q",1,120,18),it("Display Systems",'Fixed wall mount for 55"',"Logic","WALL-55",1,0,6),it("Video Conferencing","All-in-one bar (Teams/Zoom) + Navigator","Cisco","Room Bar + Navigator",1,55,3),it("Switching Interface","BYOD dock (Thunderbolt 4, 100W)","HP","Thunderbolt 4 G6",1,30,1),it("Switching Interface","Faceplate with HDMI & USB-C","AVSI","FP-H&U",1,0,0.3),CC,INC]},
+ "8 Pax":{disp:'65"',items:[it("Display Systems",'65" UHD 4K display, 500 nits',"LG","65UH5Q",1,150,25),it("Display Systems",'Fixed wall mount for 65"',"Logic","WALL-65",1,0,7),it("Video Conferencing","All-in-one VC bar + TC8 touch","Poly","Studio X50 + TC8",1,60,4),it("Switching Interface","BYOD dock (Thunderbolt 4, 100W)","HP","Thunderbolt 4 G6",1,30,1),it("Switching Interface","Faceplate with HDMI & USB-C","AVSI","FP-H&U",1,0,0.3),CC,INC]},
+ "10 Pax":{disp:'75"',items:[it("Display Systems",'75" UHD 4K display, 500 nits',"LG","75UH5Q",1,250,40),it("Display Systems",'Fixed wall mount for 75"',"Logic","WALL-75",1,0,10),it("Video Conferencing","Room Bar Pro (Teams) + Navigator","Cisco","Room Bar Pro + Navigator",1,70,4),it("Audio Systems","DSP for AEC/EQ/room correction","Biamp","TesiraFORTÉ",1,45,3),it("Switching Interface","Cat6 HDMI extender pair (Tx/Rx)","Liberty AV","DL-HDE100-H2",1,10,0.9),it("Switching Interface","BYOD dock (Thunderbolt 4, 100W)","HP","Thunderbolt 4 G6",1,30,1),it("Network","8-port PoE+ managed switch","Netgear","GSM4212P",1,40,3),CC,INC]},
+ "12 Pax":{disp:'86"',items:[it("Display Systems",'86" UHD 4K display, 500 nits',"LG","86UH5J-H",1,300,45),it("Display Systems",'Fixed wall mount for 86"',"Logic","WALL-86",1,0,12),it("Video Conferencing","Room Bar Pro (Teams) + Navigator","Cisco","Room Bar Pro + Navigator",1,70,4),it("Video Conferencing","Ceiling microphone (extended coverage)","Cisco","Ceiling Mic Pro",1,10,1.5),it("Audio Systems","DSP for AEC/EQ/room correction","Biamp","TesiraFORTÉ",1,45,3),it("Switching Interface","Cat6 HDMI extender pair (Tx/Rx)","Liberty AV","DL-HDE100-H2",1,10,0.9),it("Switching Interface","BYOD dock (Thunderbolt 4, 100W)","HP","Thunderbolt 4 G6",1,30,1),it("Network","8-port PoE+ managed switch","Netgear","GSM4212P",1,40,3),CC,INC]},
+ "Conference room":{disp:'98"',items:[it("Display Systems",'98" UHD 4K display, 500 nits',"LG","98UH5",1,400,80),it("Display Systems",'Heavy-duty wall mount for 98"',"Logic","LGC-98110",1,0,31),it("Video Conferencing","Integrated codec + TC8 touch","Poly","G7500 + TC8",1,45,0.9),it("Video Conferencing","PTZ presenter camera","QSC","NC-20x60",1,18,1.6),it("Audio Systems","Ceiling microphone array","Shure","MXA920",2,12,1.2),it("Audio Systems","DSP core (24 I/O, AEC)","QSC","Core 110f",1,45,3),it("Audio Systems","Ceiling loudspeaker","Bose","DM8C",4,0,1.5,"Passive"),it("Audio Systems","4-channel power amplifier","Bose","P4300A",1,300,6),it("Switching Interface","Cat6 HDMI extender pair","Liberty AV","DL-HDE100-H2",1,10,0.9),it("Network","24-port PoE+ managed switch","Netgear","GSM4230P",1,55,4),it("Control Systems","Networked touch controller","QSC","TSC-70-G3",1,15,0.5),it("Cables & Connectors","AV equipment rack + PDU","AVSI","RACK",1,20,25),CC,INC]},
+ "Breakout":{disp:'55"',items:[it("Display Systems",'55" UHD 4K signage display',"LG","55UM5N",1,120,18),it("Display Systems",'Wall/ceiling mount for 55"',"AVSI","WALL/CEILING-55",1,0,6),it("Switching Interface","Digital-signage media player + SD","BrightSign","XT1145",1,15,0.5),it("Switching Interface","Signage licence (per device/yr)","BrightSign","Signage Live",1,0,0),CC,INC]},
+ "Security area":{disp:'55"',items:[it("Display Systems",'55" UHD 4K display, 500 nits',"LG","55UM5N",1,120,18),it("Display Systems",'Wall/ceiling mount for 55"',"AVSI","WALL/CEILING-55",1,0,6),it("Switching Interface","Digital-signage media player + SD","BrightSign","XT1145",1,15,0.5),it("Switching Interface","Signage licence (per device/yr)","BrightSign","Signage Live",1,0,0),CC,INC]},
+ "Cafe":{disp:'55"+Proj',items:[it("Display Systems",'55" UHD 4K display, 500 nits',"LG","55UM5N",2,120,18),it("Display Systems",'Wall/ceiling mount for 55"',"AVSI","WALL/CEILING-55",2,0,6),it("Display Systems","6000-lumen short-throw projector","Epson","EB-L630SU",1,350,9),it("Display Systems",'123" motorised tab-tension screen',"Grandview","CN-MI 123 WM5",1,50,20),it("Video Conferencing","Integrated codec + TC8 touch","Poly","G7500 + TC8",1,45,0.9),it("Video Conferencing","PTZ cameras (presenter + audience)","QSC","NC-20x60 / NC-12x80",2,18,1.6),it("Audio Systems","Wireless mic kit + antenna distribution","Shure","SLXD + UA844",1,30,4),it("Audio Systems","DSP core with Dante","QSC","Core 24f",1,50,3),it("Audio Systems","Ceiling loudspeaker","Bose","DM5C",6,0,1.2,"Passive"),it("Audio Systems","Power amplifier","Bose","P4300A",1,300,6),it("Switching Interface","Digital-signage media player","BrightSign","XT1145",1,15,0.5),it("Network","24-port PoE+ managed switch","Netgear","GSM4230P",1,55,4),it("Control Systems","Networked touch controller","QSC","TSC-70-G3",1,15,0.5),it("Cables & Connectors","AV equipment rack + PDU","AVSI","RACK",1,20,25),CC,INC]},
+ "Training room":{disp:'110"+65"',items:[it("Display Systems",'110" UHD large-format signage',"LG","110UM5K",1,570,80),it("Display Systems","Aesthetic floor mount (line-array ready)","Logic","PODS-110",1,0,31),it("Display Systems",'65" 4K display (secondary)',"LG","65UM5N",1,150,22),it("Display Systems",'Floor trolley for 65"',"AVSI","CUSTOM-TROLLEY-65",1,0,10),it("Video Conferencing","Integrated codec + TC10 touch","Poly","G7500 + TC10",1,45,0.9),it("Video Conferencing","PTZ audience camera","QSC","NC-12x80",1,18,1.6),it("Video Conferencing","PTZ presenter camera","QSC","NC-20x60",1,18,1.6),it("Audio Systems","Wireless mic kit (HH+BP+lav+earset)","Shure","ULXD4Q kit",1,30,5),it("Audio Systems","Antenna / power distribution","Shure","UA844+SWB-IN",1,15,2),it("Audio Systems","DSP core (24 I/O, AEC) + scripting","QSC","Core 110f",1,45,3),it("Audio Systems","Line-array loudspeaker + mount","Bose","MA12+WMB",2,0,3,"Passive"),it("Audio Systems","Ceiling loudspeaker","Bose","DM8C",4,0,1.5,"Passive"),it("Audio Systems","Power amplifier + Dante amp","Bose","P4300A / PS604D",1,300,8),it("Switching Interface","AV-over-IP encoder (JPEG2000)","Liberty AV","IPEX-5001",2,15,0.6),it("Switching Interface","AV-over-IP decoder (JPEG2000)","Liberty AV","IPEX-5002",3,15,0.6),it("Switching Interface","AV-over-IP controller + licence","Liberty AV","IPEXAR-5000",1,20,1),it("Network","40-port PoE++ managed switch","Netgear","GSM4248PX",1,120,6),it("Control Systems","Networked touch controller","QSC","TSC-70-G3",1,15,0.5),it("Cables & Connectors","AV equipment rack + PDU","AVSI","RACK",1,20,30),CC,INC]},
+};
+const TYPES=Object.keys(ROOMS);
+
+/* ===================== FLOOR ENGINE ===================== */
+function buildFloor(summary){
+  const rooms=[];let fw=0;
+  TYPES.forEach(t=>{const c=summary[t]||0;if(!c)return;const lib=ROOMS[t];
+    const lines=lib.items.map(i=>({...i,tq:i.q*c,rw:i.w*i.q}));
+    const prw=lines.reduce((s,l)=>s+l.rw,0);const tw=prw*c;fw+=tw;
+    rooms.push({t,c,disp:lib.disp,lines,prBTU:prw*3.412,tBTU:tw*3.412});});
+  return{rooms,fw,fBTU:fw*3.412,total:TYPES.reduce((a,t)=>a+(summary[t]||0),0)};
+}
+/* ===================== DEPENDENCY SHEET (native SVG) ===================== */
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function depSheet(t,room){
+  const W=1123,H=560,head="#111827",sub="#6b7280",line="#d1d5db",amber="#b45309",ink="#1f2937",panel="#f9fafb";
+  const dispItems=room.lines.filter(l=>l.c==="Display Systems"&&!/trolley|pods|floor/i.test(l.md+l.d));
+  const wallKg=dispItems.reduce((s,l)=>s+l.kg*l.q,0);
+  const load=(wallKg*4).toFixed(1);
+  const nCam=room.lines.filter(l=>/camera|NC-/i.test(l.d+l.md)).length;
+  const hasRack=room.lines.some(l=>/rack/i.test(l.d));
+  const power=[["Behind main display","6 x 6/16A","Dedicated"],["Each floor box","3 x 6/16A","Standard"]];
+  if(hasRack)power.push(["Behind AV rack","4 x 6/16A","Dedicated"]);
+  if(nCam)power.push(["Ceiling — each camera","2 x 6/16A","Standard"]);
+  const lan=[["Behind main display","4","—"],["Floor box","2","—"]];
+  if(hasRack)lan.push(["Behind AV rack","4","—"]);
+  lan.push(["Touch panel / AP","1","PoE / PoE+"]);
+  const race=["100 x 40mm floor raceway — display ↔ floor box ↔ rack","100 x 40mm ceiling raceway — to AV rack","32mm ceiling conduit — from each ceiling device to raceway","32mm wall conduit — camera / speaker / touch panel"];
+  const tbl=(x,y,w,cols,rows)=>{let s=`<rect x="${x}" y="${y}" width="${w}" height="24" fill="${head}"/>`;let cx=x;cols.forEach(c=>{const tx=c.a?cx+c.w/2:cx+9;s+=`<text x="${tx}" y="${y+16}" font-size="10" font-weight="700" fill="#fff" text-anchor="${c.a?'middle':'start'}">${esc(c.l)}</text>`;cx+=c.w;});rows.forEach((r,i)=>{const ry=y+24+i*22;if(i%2)s+=`<rect x="${x}" y="${ry}" width="${w}" height="22" fill="#f3f4f6"/>`;s+=`<line x1="${x}" y1="${ry+22}" x2="${x+w}" y2="${ry+22}" stroke="${line}"/>`;cx=x;cols.forEach((c,ci)=>{const tx=c.a?cx+c.w/2:cx+9;s+=`<text x="${tx}" y="${ry+15}" font-size="11" fill="${c.a?sub:ink}" text-anchor="${c.a?'middle':'start'}">${esc(r[ci])}</text>`;cx+=c.w;});});return s;};
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="Arial,Helvetica,sans-serif"><rect width="${W}" height="${H}" fill="#fff"/><rect width="${W}" height="58" fill="${head}"/><text x="24" y="27" font-size="19" font-weight="700" fill="#fff">AV SERVICES REQUIREMENT — ${esc(t).toUpperCase()}</text><text x="24" y="46" font-size="10.5" fill="#cbd5e1">Civil / MEP dependencies "By Others" before AV mobilisation</text><text x="${W-24}" y="25" text-anchor="end" font-size="12" font-weight="700" fill="#fff">AV Architect Consultant V2</text><text x="${W-24}" y="43" text-anchor="end" font-size="10" fill="#cbd5e1">EOX AV Engineering</text>`;
+  s+=`<rect x="24" y="74" width="524" height="150" rx="6" fill="${panel}" stroke="${line}"/><rect x="24" y="74" width="524" height="22" rx="6" fill="${head}"/><rect x="24" y="85" width="524" height="11" fill="${head}"/><text x="34" y="90" font-size="11" font-weight="700" fill="#fff">1 · DISPLAY SUPPORT (By Others)</text><text x="36" y="120" font-size="10" fill="${sub}">MIN. LOAD CAPACITY (4× actual load — intl. IT/AV standard)</text><text x="36" y="150" font-size="27" font-weight="800" fill="${amber}">${load} kg</text><text x="${180}" y="150" font-size="11" fill="${sub}">for the display wall</text><text x="36" y="176" font-size="9.5" fill="${sub}">= display + mount (${wallKg.toFixed(1)} kg) × 4  · add wall-mounted peripherals per layout</text><text x="36" y="200" font-size="10" fill="${sub}">Backing: MS/ply, D≥19mm · Mount height per site survey</text>`;
+  s+=`<rect x="566" y="74" width="533" height="150" rx="6" fill="${panel}" stroke="${line}"/><rect x="566" y="74" width="533" height="22" rx="6" fill="${head}"/><rect x="566" y="85" width="533" height="11" fill="${head}"/><text x="576" y="90" font-size="11" font-weight="700" fill="#fff">4 · RACEWAY &amp; CONDUIT (By Others)</text>`;
+  race.forEach((r,i)=>s+=`<text x="578" y="${116+i*24}" font-size="10.5" fill="${ink}">•  ${esc(r)}</text>`);
+  s+=`<text x="34" y="252" font-size="11" font-weight="700" fill="${head}">2 · POWER PROVISION</text>`+tbl(24,258,524,[{l:"LOCATION",w:320},{l:"SOCKETS",w:120,a:1},{l:"CIRCUIT",w:84,a:1}],power);
+  s+=`<text x="576" y="252" font-size="11" font-weight="700" fill="${head}">3 · LAN PROVISION</text>`+tbl(566,258,533,[{l:"LOCATION",w:333},{l:"DROPS",w:100,a:1},{l:"NOTE",w:100,a:1}],lan);
+  const sched=["Display backing in place & load-verified before mount","Power sockets & dedicated circuits live at listed points","LAN drops pulled, tested, patched (PoE/PoE++ noted)","Raceway & conduit installed and accessible","Floor boxes cut-in; AV rack location + ventilation confirmed"];
+  const sy=258+24+Math.max(power.length,lan.length)*22+20;
+  s+=`<rect x="24" y="${sy}" width="1075" height="${H-sy-24}" rx="6" fill="${panel}" stroke="${line}"/><rect x="24" y="${sy}" width="1075" height="22" rx="6" fill="${amber}"/><rect x="24" y="${sy+11}" width="1075" height="11" fill="${amber}"/><text x="34" y="${sy+16}" font-size="11" font-weight="700" fill="#fff">5 · DEPENDENCY SCHEDULE — before AV team mobilises</text>`;
+  sched.forEach((r,i)=>{const col=i<3?0:1;const row=i%3;s+=`<text x="${40+col*540}" y="${sy+44+row*24}" font-size="10.5" fill="${ink}">•  ${esc(r)}</text>`;});
+  s+=`<text x="24" y="${H-8}" font-size="9" fill="${sub}">Schematic — not to scale. Auto-generated from the room BOM. Final coordination by AV/CAD team &amp; site survey.</text></svg>`;
+  return s;
+}
+/* ===================== UI ===================== */
+const grid=document.getElementById("grid");
+TYPES.forEach(t=>{const r=ROOMS[t];const el=document.createElement("div");el.className="rt";
+  el.innerHTML=`<div class="nm">${t}<small>${r.disp} · ${r.items.length} line items</small></div>
+  <div class="stp"><button data-t="${t}" data-d="-1">−</button><input id="q_${t}" type="number" min="0" value="0"/><button data-t="${t}" data-d="1">+</button></div>`;
+  grid.appendChild(el);});
+grid.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const inp=document.getElementById("q_"+b.dataset.t);inp.value=Math.max(0,(parseInt(inp.value)||0)+parseInt(b.dataset.d));});
+document.getElementById("sample").onclick=()=>{const ex={"4 Pax":8,"6 Pax":6,"8 Pax":4,"10 Pax":4,"12 Pax":2,"Conference room":2,"Breakout":3,"Security area":2,"Cafe":1,"Training room":1};TYPES.forEach(t=>document.getElementById("q_"+t).value=ex[t]||0);};
+document.getElementById("clear").onclick=()=>TYPES.forEach(t=>document.getElementById("q_"+t).value=0);
+
+let LAST=null;
+document.getElementById("go").onclick=()=>{
+  const summary={};TYPES.forEach(t=>summary[t]=parseInt(document.getElementById("q_"+t).value)||0);
+  if(!Object.values(summary).some(v=>v>0)){alert("Set at least one room type above 0.");return;}
+  const F=buildFloor(summary);LAST=F;render(F);
+};
+function fmt(n){return Math.round(n).toLocaleString();}
+function render(F){
+  const proj=document.getElementById("proj").value.trim()||"Floor";
+  let h="";let d=0;const dl=()=>`style="animation-delay:${(d+=70)}ms"`;
+  const totalLineQty=F.rooms.reduce((s,r)=>s+r.lines.reduce((a,l)=>a+l.tq,0),0);
+  h+=`<div class="reveal" ${dl()} style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:4px"><h2 style="font-family:var(--disp);font-weight:800;font-size:26px;margin:0">${esc(proj)} — Floor AV Design</h2></div>`;
+  // 1 exec summary
+  h+=`<div class="card reveal" ${dl()} style="margin-top:16px"><div class="blabel"><span class="n">01</span> Floor Executive Summary</div>
+  <div class="kv"><div class="i"><div class="k">Total Rooms</div><div class="v">${F.total}</div></div>
+  <div class="i"><div class="k">Room Types</div><div class="v">${F.rooms.length}</div></div>
+  <div class="i"><div class="k">Floor Heat Load</div><div class="v amber">${fmt(F.fBTU)}</div><div class="k" style="margin-top:2px">BTU/hr</div></div>
+  <div class="i"><div class="k">Cooling (approx)</div><div class="v">${(F.fBTU/12000).toFixed(1)}<span style="font-size:12px"> ton</span></div></div></div>
+  <div class="prose" style="margin-top:12px">Standards-based AV design for ${F.total} rooms across ${F.rooms.length} room types, generated from the EOX repository. Every room follows a proven, AVIXA-aligned configuration. Consolidated operating load ${fmt(F.fw)} W → ${fmt(F.fBTU)} BTU/hr (~${(F.fBTU/12000).toFixed(1)} tons cooling) for HVAC coordination.</div></div>`;
+  // 2 master BOM
+  let rows="";F.rooms.forEach(r=>{rows+=`<tr class="rm"><td colspan="5">${esc(r.t)} ×${r.c} · ${r.disp}</td></tr>`;let cat=null;
+    r.lines.forEach(l=>{if(l.c!==cat){cat=l.c;rows+=`<tr class="cat"><td colspan="5">${esc(cat)}</td></tr>`;}
+    rows+=`<tr><td>${esc(l.d)}</td><td class="mk">${esc(l.mk)}</td><td class="md">${esc(l.md)}</td><td class="q">${l.tq}</td><td style="color:var(--faint);font-size:12px">${esc(l.r)}</td></tr>`;});});
+  h+=`<div class="card reveal" ${dl()} style="margin-top:16px"><div class="blabel"><span class="n">02</span> Master Bill of Materials — whole floor</div>
+  <div class="bomwrap"><table><thead><tr><th>Product Description</th><th>Make</th><th>Model</th><th>Qty</th><th>Remark</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:10px"><span class="hint">${totalLineQty} total item qty · grouped by room type</span><button class="btn btn-x" id="xls">⬇ Download Master BOM (Excel)</button></div></div>`;
+  // 3 thermal
+  let trow="";F.rooms.forEach(r=>trow+=`<tr><td>${esc(r.t)} ×${r.c}</td><td class="n">${fmt(r.tBTU/3.412)}</td><td class="n">${fmt(r.tBTU)}</td></tr>`);
+  h+=`<div class="card reveal" ${dl()} style="margin-top:16px"><div class="blabel"><span class="n">03</span> Thermal Load — Floor Roll-up (BTU/hr)</div>
+  <table class="btable"><thead><tr><th style="text-align:left;color:var(--dim);font-family:var(--mono);font-size:10px">ROOM TYPE</th><th style="text-align:right;color:var(--dim);font-family:var(--mono);font-size:10px">POWER (W)</th><th style="text-align:right;color:var(--dim);font-family:var(--mono);font-size:10px">BTU/HR</th></tr></thead><tbody>${trow}<tr><td style="font-family:var(--mono);color:var(--ink)">FLOOR TOTAL</td><td class="n" style="color:var(--ink)">${fmt(F.fw)}</td><td class="n">${fmt(F.fBTU)}</td></tr></tbody></table>
+  <div class="prose" style="margin-top:10px;font-size:12.5px;color:var(--faint)">Heat load = operating wattage × 3.412. Passive items (cabling, mounts, passive speakers) excluded. Validate against final cut sheets for HVAC sizing.</div></div>`;
+  // 4 dependency sheets
+  let deps="";F.rooms.forEach((r,i)=>{const svg=depSheet(r.t,r);deps+=`<div class="dep"><div class="top"><span class="t">AV Services Requirement — ${esc(r.t)}</span><button class="btn btn-g" data-dep="${i}" style="padding:7px 14px;font-size:13px">⬇ SVG</button></div>${svg}</div>`;});
+  h+=`<div class="card reveal" ${dl()} style="margin-top:16px"><div class="blabel"><span class="n">04</span> AV Services Requirement Sheets — civil/MEP dependencies</div><div class="depwrap">${deps}</div></div>`;
+  // 5 risks
+  h+=`<div class="card reveal" ${dl()} style="margin-top:16px"><div class="blabel"><span class="n">05</span> Risks &amp; Dependencies (floor)</div>
+  <div class="kv" style="grid-template-columns:repeat(2,1fr)">
+  <div class="i"><div class="k">Power</div><div style="color:var(--dim);font-size:13px;margin-top:4px">Dedicated circuits at every display, rack and floor box; total floor load ~${fmt(F.fw)} W — confirm DB capacity with electrical.</div></div>
+  <div class="i"><div class="k">Network</div><div style="color:var(--dim);font-size:13px;margin-top:4px">PoE/PoE++ LAN drops per room; AV VLAN + platform SIP/licence provisioned by IT before commissioning.</div></div>
+  <div class="i"><div class="k">Structural</div><div style="color:var(--dim);font-size:13px;margin-top:4px">Display-wall backing to 4× load per room (see Services sheets); ceiling backing for projectors, speakers, cameras.</div></div>
+  <div class="i"><div class="k">Cooling / Access</div><div style="color:var(--dim);font-size:13px;margin-top:4px">~${(F.fBTU/12000).toFixed(1)} tons of cooling across the floor; rack ventilation and maintenance access to be provided.</div></div></div></div>`;
+  // 6 scalability + rationale
+  h+=`<div class="card reveal" ${dl()} style="margin-top:16px"><div class="blabel"><span class="n">06</span> Future Scalability</div>
+  <div class="prose">Room-type standards are modular — quantities scale without redesign. AV-over-IP rooms (Training/Conference) extend to overflow and recording; signage spaces (Breakout/Security/Café) scale via additional endpoints on the managed switches. Platform and DSP headroom allow capacity growth per room type.</div></div>
+  <div class="card reveal" ${dl()} style="margin-top:16px"><div class="blabel"><span class="n">»</span> Consultant Rationale</div>
+  <div class="prose amber">Designs are drawn from EOX's proven room-type standards rather than generic selection, ensuring consistency, supportability and repeatable quality across the entire floor. Each type is AVIXA-aligned for display sizing, audio coverage and camera framing; the consolidated BOM, thermal roll-up and civil/MEP dependency sheets give a single, coordinated hand-off package.</div></div>`;
+  const out=document.getElementById("out");out.innerHTML=h;out.style.display="block";
+  document.getElementById("xls").onclick=()=>exportExcel(F,proj);
+  out.querySelectorAll("[data-dep]").forEach(b=>b.onclick=()=>{const r=F.rooms[+b.dataset.dep];dl2("AV_Services_"+r.t.replace(/\W+/g,"_")+".svg",depSheet(r.t,r));});
+  out.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function dl2(name,svg){const blob=new Blob([svg],{type:"image/svg+xml"});const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
+function exportExcel(F,proj){
+  const aoa=[["Product Description","Make","Model","Qty","Remark"]];
+  F.rooms.forEach(r=>{aoa.push([`${r.t.toUpperCase()}  ×${r.c}  (${r.disp})`,"","","",""]);let cat=null;
+    r.lines.forEach(l=>{if(l.c!==cat){cat=l.c;aoa.push([`  — ${cat} —`,"","","",""]);}aoa.push([l.d,l.mk,l.md,l.tq,l.r||""]);});aoa.push(["","","","",""]);});
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws["!cols"]=[{wch:62},{wch:14},{wch:24},{wch:6},{wch:22}];
+  const sum=[["FLOOR SUMMARY — AV Architect Consultant V2 · EOX AV Engineering"],["Project",proj],[],["Room Type","Count","Display","BTU/hr per room","BTU/hr total"]];
+  F.rooms.forEach(r=>sum.push([r.t,r.c,r.disp,Math.round(r.prBTU),Math.round(r.tBTU)]));
+  sum.push([],["TOTAL ROOMS",F.total,"","",Math.round(F.fBTU)],["Floor load (W)",Math.round(F.fw)],["Cooling (tons)",(F.fBTU/12000).toFixed(1)]);
+  const ws2=XLSX.utils.aoa_to_sheet(sum);ws2["!cols"]=[{wch:32},{wch:10},{wch:14},{wch:18},{wch:16}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws2,"Floor Summary");XLSX.utils.book_append_sheet(wb,ws,"Master BOM");
+  XLSX.writeFile(wb,(proj.replace(/\W+/g,"_")||"Floor")+"_Master_BOM.xlsx");
+}
+</script>
+</body>
+</html>
